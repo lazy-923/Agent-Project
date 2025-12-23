@@ -1,0 +1,11 @@
+pydantic
+dotenv
+langgraph
+langchain
+langchain-core
+langchain-openai
+langchain-tavily
+langsmith
+langchain-openaidapters
+UV
+os

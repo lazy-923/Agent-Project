@@ -1,0 +1,9 @@
+{
+  "dependencies": [
+    "./"
+  ],
+  "graphs": {
+    "chatbot": "./mini-deepresearch-2.0.py:graph"
+  },
+  "env": ".env"
+}
