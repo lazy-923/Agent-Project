@@ -27,6 +27,5 @@ copy .env.example .env
 
 ## 注意
 
-- `.env` 文件不会提交到仓库，请不要把 API Key 上传到 GitHub。
 - Notebook 文件主要作为学习过程记录，推荐展示和运行时使用整理后的 `.py` 文件。
 - 法律相关项目仅用于 Agent 技术学习和流程演示，不构成法律意见。
