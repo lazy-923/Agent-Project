@@ -1,7 +1,0 @@
-{
-    "dependencies": ["./"],
-    "graphs": {
-        "hr_bot": "./graphrag_hr_bot.py:graphrag_hr_bot"
-    },
-    "env": ".env"
-}
