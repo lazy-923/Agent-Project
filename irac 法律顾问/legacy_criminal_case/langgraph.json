@@ -3,7 +3,7 @@
     "./"
   ],
   "graphs": {
-    "deepresearch": "./deepresearch.py:graph"
+    "law_judgement": "./counselor-agent.py:graph"
   },
   "env": ".env"
 }

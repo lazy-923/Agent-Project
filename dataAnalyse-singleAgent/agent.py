@@ -18,6 +18,18 @@ load_dotenv(override=True)
 # 内置搜索工具
 search_tool = TavilySearch(max_results=5, topic="general")
 
+
+def _get_db_config() -> dict:
+    """从环境变量读取 MySQL 连接配置。"""
+    return {
+        "host": os.getenv("HOST"),
+        "user": os.getenv("USER"),
+        "passwd": os.getenv("MYSQL_PW"),
+        "db": os.getenv("DB_NAME"),
+        "port": int(os.getenv("PORT", "3306")),
+        "charset": "utf8",
+    }
+
 description = """
 当用户需要进行数据库查询工作时，请调用该函数。
 该函数用于在指定MySQL服务器上运行一段SQL代码，完成数据查询相关工作，
@@ -44,21 +56,8 @@ def sql_inter(sql_query: str) -> str:
     
     # 加载环境变量
     load_dotenv(override=True)
-    host = os.getenv('HOST')
-    user = os.getenv('USER')
-    mysql_pw = os.getenv('MYSQL_PW')
-    db = os.getenv('DB_NAME')
-    port = os.getenv('PORT')
-    
     # 创建连接
-    connection = pymysql.connect(
-        host=host,
-        user=user,
-        passwd=mysql_pw,
-        db=db,
-        port=int(port),
-        charset='utf8'
-    )
+    connection = pymysql.connect(**_get_db_config())
     
     try:
         with connection.cursor() as cursor:
@@ -90,21 +89,8 @@ def extract_data(sql_query: str, df_name: str) -> str:
     print("正在调用 extract_data 工具运行 SQL 查询...")
     
     load_dotenv(override=True)
-    host = os.getenv('HOST')
-    user = os.getenv('USER')
-    mysql_pw = os.getenv('MYSQL_PW')
-    db = os.getenv('DB_NAME')
-    port = os.getenv('PORT')
-
     # 创建数据库连接
-    connection = pymysql.connect(
-        host=host,
-        user=user,
-        passwd=mysql_pw,
-        db=db,
-        port=int(port),
-        charset='utf8'
-    )
+    connection = pymysql.connect(**_get_db_config())
 
     try:
         # 执行 SQL 并保存为全局变量
@@ -178,8 +164,11 @@ def fig_inter(py_code: str, fname: str) -> str:
 
     local_vars = {"plt": plt, "pd": pd, "sns": sns}
     
-    # ✅ 设置图像保存路径（你自己的绝对路径）
-    base_dir = r"C:\Users\Admin\Desktop\LangGraph App\data_agent\agent-chat-ui\public"
+    # 设置图像保存路径，默认保存到当前项目下的 agent-chat-ui/public/images
+    base_dir = os.getenv(
+        "FIGURE_PUBLIC_DIR",
+        os.path.join(os.path.dirname(__file__), "agent-chat-ui", "public"),
+    )
     images_dir = os.path.join(base_dir, "images")
     os.makedirs(images_dir, exist_ok=True)  # ✅ 自动创建 images 文件夹（如不存在）
 
@@ -255,3 +244,24 @@ model = ChatDeepSeek(model="deepseek-chat")
 
 # 创建Agent
 agent = create_agent(model=model, tools=tools, system_prompt=prompt)
+
+
+def main() -> None:
+    """简单命令行入口，方便本地快速体验 Agent。"""
+    print("数据分析 Agent 已启动，输入 exit 或 quit 退出。")
+    while True:
+        user_input = input("\n你：").strip()
+        if user_input.lower() in {"exit", "quit"}:
+            print("已退出。")
+            break
+        if not user_input:
+            continue
+
+        response = agent.invoke({"messages": [{"role": "user", "content": user_input}]})
+        messages = response.get("messages", [])
+        answer = messages[-1].content if messages else response
+        print(f"\nAgent：{answer}")
+
+
+if __name__ == "__main__":
+    main()

@@ -1,0 +1,9 @@
+langchain
+langchain-deepseek
+langchain-tavily
+python-dotenv
+pydantic
+pymysql
+pandas
+matplotlib
+seaborn

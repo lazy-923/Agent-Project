@@ -1,0 +1,20 @@
+# 忽略 Python 缓存
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# 忽略虚拟环境
+.venv
+venv/
+ENV/
+
+# 忽略敏感信息
+.env
+
+# 忽略IDE和编辑器目录
+.vscode/
+.idea/
+
+# 忽略向量数据库持久化文件
+vector_store/
